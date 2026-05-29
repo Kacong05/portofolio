@@ -93,7 +93,7 @@ export default function Header() {
             AD
           </span>
           <span className="hidden text-sm font-semibold tracking-wide text-slate-200 sm:inline">
-            Aditya<span className="text-slate-500">.dev</span>
+            Aditya<span className="text-slate-300">.dev</span>
           </span>
         </Link>
 

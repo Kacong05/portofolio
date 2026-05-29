@@ -191,7 +191,7 @@ function StatCard({
         <span className={`text-4xl font-bold tabular-nums ${accent.text}`}>
           {animated}
         </span>
-        <span className="mb-1 text-xs font-medium text-slate-500">total</span>
+        <span className="mb-1 text-xs font-medium text-slate-400">total</span>
       </div>
 
       <p className="relative mt-1 text-xs text-slate-400">{config.description}</p>
@@ -381,7 +381,7 @@ export default function GitHubSection() {
               <h3 className="github-subtitle text-base font-semibold text-slate-100 md:text-lg">
                 Contribution Activity
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-400">
                 Past year of contributions on @{username}
               </p>
             </div>

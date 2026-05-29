@@ -129,7 +129,7 @@ export default function SkillsSection() {
               <h3 className="skill-name text-sm font-semibold text-slate-100 md:text-base">
                 {skill.name}
               </h3>
-              <span className="skill-category mt-1 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">
+              <span className="skill-category mt-1 text-[11px] font-medium uppercase tracking-[0.18em] text-slate-400">
                 {skill.category}
               </span>
 
@@ -144,7 +144,7 @@ export default function SkillsSection() {
 
         {/* Footer */}
         <div className="mt-12 text-center">
-          <p className="skills-footer text-sm text-slate-500">
+          <p className="skills-footer text-sm text-slate-400">
             Always learning and exploring new technologies
           </p>
         </div>

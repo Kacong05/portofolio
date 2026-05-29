@@ -4,7 +4,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="site-footer relative z-10 border-t border-white/10 bg-black px-6 py-5">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-[11px] font-medium uppercase tracking-[0.22em] text-slate-500 sm:flex-row">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 text-[11px] font-medium uppercase tracking-[0.22em] text-slate-300 sm:flex-row">
         <span>© {year} Aditya Dwi Hardiansyah. All Rights Reserved.</span>
 
         <span className="footer-built inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-4 py-1.5 text-[10px] tracking-[0.25em] text-slate-300">

@@ -87,8 +87,11 @@ export default function HeroSection() {
         </p>
 
         {/* Name */}
-        <h1 className="hero-name relative mt-3 break-words text-[clamp(1.75rem,7vw,4rem)] font-extrabold leading-[1.05] tracking-tight">
-          <span className="hero-name-text" aria-label={fullName}>
+        <h1
+          aria-label={fullName}
+          className="hero-name relative mt-3 break-words text-[clamp(1.75rem,7vw,4rem)] font-extrabold leading-[1.05] tracking-tight"
+        >
+          <span className="hero-name-text">
             {nameWords.map((word, wIdx) => {
               // Track absolute letter index across all words for stagger
               const previousLetters = nameWords

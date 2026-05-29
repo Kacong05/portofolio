@@ -444,7 +444,7 @@ export default function ProjectsSection() {
 
                 {/* Footer */}
                 <div className="mt-3 flex items-center justify-between border-t border-white/5 pt-3">
-                  <span className="text-[10px] font-medium text-slate-500">
+                  <span className="text-[10px] font-medium text-slate-400">
                     Click to see more
                   </span>
                   <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-slate-300 transition-all group-hover:border-white/30 group-hover:bg-white/10 group-hover:text-white">
