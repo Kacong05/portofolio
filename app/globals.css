@@ -230,29 +230,7 @@ select,
   pointer-events: auto;
 }
 
-/* Mobile menu */
-.site-mobile-menu {
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  z-index: 9998;
-}
-
-.site-mobile-menu.is-open {
-  pointer-events: auto;
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.site-mobile-menu ul {
-  background: rgba(10, 10, 10, 0.92);
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
-.site-mobile-menu li a {
-  color: #cbd5e1;
-}
+/* Mobile menu open/close handled via conditional rendering in Header.tsx */
 
 /* =====================================================
    Hero section

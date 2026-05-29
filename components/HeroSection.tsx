@@ -52,7 +52,7 @@ function InstagramIcon() {
 export default function HeroSection() {
   const [roleIndex, setRoleIndex] = useState(0);
 
-  const fullName = 'Aditya Dwi Hardiansyah';
+  const fullName = 'Aditya\u00A0Dwi Hardiansyah';
 
   // Role rotator
   useEffect(() => {
@@ -86,7 +86,7 @@ export default function HeroSection() {
         </p>
 
         {/* Name */}
-        <h1 className="hero-name relative mt-3 text-3xl font-extrabold leading-[1.05] tracking-tight md:text-5xl lg:text-6xl">
+        <h1 className="hero-name relative mt-3 break-words text-[clamp(1.75rem,7vw,4rem)] font-extrabold leading-[1.05] tracking-tight">
           <span className="hero-name-text" aria-label={fullName}>
             {fullName.split('').map((char, i) => {
               if (char === ' ') return <span key={i}> </span>;

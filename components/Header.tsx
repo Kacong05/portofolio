@@ -145,33 +145,42 @@ export default function Header() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      <div className={`site-mobile-menu absolute inset-x-0 top-full mt-2 md:hidden ${mobileOpen ? 'is-open' : ''}`}>
-        <ul className="mx-6 mt-2 flex flex-col gap-1 rounded-2xl border border-white/10 bg-slate-950/80 p-2 backdrop-blur-xl">
-          {NAV_LINKS.map((link) => {
-            const id = link.href.slice(1);
-            const isActive = activeSection === id;
-            return (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm transition-colors ${
-                    isActive
-                      ? 'bg-white/10 text-white'
-                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
-                  }`}
-                >
-                  <span>{link.label}</span>
-                  {isActive && (
-                    <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      {/* Mobile menu overlay (rendered only when open so phantom tap targets can't exist) */}
+      {mobileOpen && (
+        <>
+          <div
+            className="site-mobile-backdrop fixed inset-0 z-[9990] bg-black/50 backdrop-blur-sm md:hidden"
+            onClick={() => setMobileOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="site-mobile-menu fixed inset-x-0 top-16 z-[9991] px-6 md:hidden">
+            <ul className="flex flex-col gap-1 rounded-2xl border border-white/10 bg-slate-950/95 p-2 backdrop-blur-xl shadow-2xl shadow-black/50">
+              {NAV_LINKS.map((link) => {
+                const id = link.href.slice(1);
+                const isActive = activeSection === id;
+                return (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm transition-colors ${
+                        isActive
+                          ? 'bg-white/10 text-white'
+                          : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <span>{link.label}</span>
+                      {isActive && (
+                        <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
+                      )}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </>
+      )}
     </header>
   );
 }
