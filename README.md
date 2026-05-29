@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio — Aditya Dwi Hardiansyah
 
-## Getting Started
+Halo, saya **Aditya Dwi Hardiansyah** — Web Developer dari Jember, Indonesia.
+Repo ini berisi source code website portofolio pribadi saya yang dibangun
+dengan Next.js dan tema **chrome-silver on black**.
 
-First, run the development server:
+Live: _coming soon_
+
+## Tentang saya
+
+Saya seorang fresh graduate yang fokus di pengembangan web. Selama kuliah
+dan beberapa proyek freelance, saya banyak bermain dengan **Laravel** dan
+**React**, mulai dari sistem manajemen toko, platform pemesanan online,
+sampai dashboard IoT untuk monitoring postur tubuh.
+
+Saya suka detail visual, animasi yang halus, dan kode yang rapi—tapi yang
+paling saya kejar adalah membuat sesuatu yang benar-benar dipakai dan
+membantu orang.
+
+- 📍 Jember, Indonesia
+- 🎓 Information Technology
+- 📧 adityahardiansyah5@gmail.com
+- 🐙 [github.com/Kacong05](https://github.com/Kacong05)
+
+## Tentang website ini
+
+Web ini adalah ruang saya untuk:
+
+- Memperkenalkan diri lewat section **About**, **Skills**, dan stats GitHub
+- Memamerkan beberapa **project** yang sudah saya kerjakan, lengkap dengan
+  galeri foto + detail fitur
+- Menampilkan **sertifikat** yang saya kumpulkan
+- Menyediakan jalan paling cepat buat orang yang mau ngajak ngobrol
+  (WhatsApp, email, sosial media)
+
+Beberapa hal yang saya cari saat membangunnya:
+
+- **Monochrome** — semua section pakai palet hitam + chrome silver, tanpa
+  warna aksen yang mencolok. Lebih kalem, lebih konsisten.
+- **Cepat** — gambar dikompres pakai `sharp`, di-serve dalam format
+  AVIF/WebP otomatis lewat `next/image`.
+- **Tanpa drama** — hero langsung tampil tanpa typewriter yang bisa gagal,
+  GitHub stats punya fallback kalau API rate-limit, semua interaksi tetap
+  bisa diklik di HP maupun laptop.
+
+## Tech stack
+
+| Bagian | Tools |
+| --- | --- |
+| Framework | Next.js 16 (App Router) + React 19 |
+| Styling | Tailwind CSS v4 + custom CSS |
+| Bahasa | TypeScript |
+| Image optim. | `next/image` + `sharp` |
+| Hosting | Vercel (rencana) |
+
+Semua icon ditulis tangan sebagai inline SVG, tidak pakai icon library, jadi
+ukurannya tetap kecil.
+
+## Menjalankan secara lokal
 
 ```bash
+# 1. install dependency
+npm install
+
+# 2. jalankan dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Script lain
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build              # build untuk produksi
+npm run start              # jalankan hasil build
+npm run lint               # cek lint
+npm run compress:images    # kompres semua foto di public/images/
+npm run originals:move     # pindahkan backup hasil kompresi keluar dari public/
+```
 
-## Learn More
+## Struktur folder
 
-To learn more about Next.js, take a look at the following resources:
+```
+.
+├─ app/                  # routing & layout (App Router)
+├─ components/           # semua section + Header/Footer
+├─ public/
+│  ├─ cv/                # CV PDF
+│  └─ images/            # foto profil, project, sertifikat
+├─ scripts/              # utility (kompres foto, dsb)
+└─ next.config.ts
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Catatan
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Konten website (project, sertifikat, foto) merupakan milik saya pribadi.
+Source code-nya boleh dijadikan referensi, tapi tolong **jangan deploy
+ulang sebagai portofolio kamu sendiri**.
 
-## Deploy on Vercel
+Kalau mau ngobrol soal kerjaan, kolaborasi, atau cuma sekadar tanya
+gimana cara bikin section-nya, japri saya lewat
+[WhatsApp](https://wa.me/6285708779638) atau email di atas.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+— **Adit**

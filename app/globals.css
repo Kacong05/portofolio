@@ -1,26 +1,682 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* =====================================================
+   Base
+   ===================================================== */
+html,
+body {
+  overflow-x: clip;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Avoid the fixed header overlapping headings when navigating to anchors */
+section[id] {
+  scroll-margin-top: 80px;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), sans-serif;
+  background-color: #000000;
+  color: #e2e8f0;
+}
+
+/* Block accidental text selection on chrome (we want a "designed" feel),
+   but keep it on real text inputs. */
+* {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Make every interactive element actually clickable on every device.
+   Some sections sit under absolutely positioned decorative layers, so we
+   force pointer-events: auto here as a safety net. */
+button,
+a,
+input,
+textarea,
+select,
+[role="button"] {
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* =====================================================
+   Section backgrounds + grid overlay (chrome black theme)
+   ===================================================== */
+.hero-section,
+#about,
+.projects-section,
+#skills,
+.github-section,
+.certificates-section,
+.contact-section,
+.site-footer {
+  position: relative;
+  background-color: #000000 !important;
+  color: #e2e8f0;
+}
+
+.hero-section::before,
+#about::before,
+.projects-section::before,
+#skills::before,
+.github-section::before,
+.certificates-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  z-index: 0;
+}
+
+/* Chrome silver gradient text */
+.gradient-text {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f8fafc 30%,
+    #cbd5e1 55%,
+    #94a3b8 75%,
+    #f8fafc 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  filter: drop-shadow(0 6px 24px rgba(255, 255, 255, 0.06));
+  letter-spacing: -0.02em;
+  /* Fallback color if bg-clip:text fails */
+  color: #f8fafc;
+}
+
+/* =====================================================
+   About section orbit decorations
+   ===================================================== */
+.glow-cyan {
+  box-shadow: 0 0 30px rgba(103, 232, 249, 0.5);
+}
+
+@keyframes orbitRight {
+  0%, 100% { transform: translate(0, -80px); }
+  25%      { transform: translate(80px, -40px); }
+  50%      { transform: translate(80px, 40px); }
+  75%      { transform: translate(0, 80px); }
+}
+
+@keyframes orbitLeft {
+  0%, 100% { transform: translate(0, 80px); }
+  25%      { transform: translate(-80px, 40px); }
+  50%      { transform: translate(-80px, -40px); }
+  75%      { transform: translate(0, -80px); }
+}
+
+.animate-orbit-right { animation: orbitRight 8s ease-in-out infinite; }
+.animate-orbit-left  { animation: orbitLeft 10s ease-in-out infinite; }
+
+/* About info cards: monochrome */
+.info-card-blue,
+.info-card-green,
+.info-card-purple,
+.info-card-brown {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+}
+
+.info-card-blue i,
+.info-card-green i,
+.info-card-purple i,
+.info-card-brown i {
+  color: #cbd5e1;
+}
+
+/* Section subtitles uniform muted color */
+.projects-subtitle,
+.certs-subtitle,
+.skills-subtitle,
+.github-subtitle,
+.about-text,
+.about-subtitle {
+  color: #94a3b8;
+}
+
+/* =====================================================
+   Header
+   ===================================================== */
+.site-header {
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  z-index: 9999;
+}
+
+.site-header.is-scrolled {
+  background-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.site-logo-mark {
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 60%, #cbd5e1 100%);
+  box-shadow: 0 6px 18px -8px rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.02em;
+}
+
+.site-nav,
+.site-icon-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+}
+
+.site-nav-link {
+  isolation: isolate;
+  color: #94a3b8;
+}
+
+.site-nav-link:hover,
+.site-nav-link.site-nav-link-active {
+  color: #ffffff;
+}
+
+.site-nav-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+/* Make header buttons reliably clickable on top of any decorative layers */
+.site-icon-btn,
+.site-nav,
+.site-logo,
+.site-nav-link {
+  position: relative;
+  z-index: 100;
+  pointer-events: auto;
+}
+
+/* Mobile menu */
+.site-mobile-menu {
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 9998;
+}
+
+.site-mobile-menu.is-open {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.site-mobile-menu ul {
+  background: rgba(10, 10, 10, 0.92);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.site-mobile-menu li a {
+  color: #cbd5e1;
+}
+
+/* =====================================================
+   Hero section
+   ===================================================== */
+.hero-section {
+  background-color: #080b14;
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, black 35%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 35%, transparent 75%);
+  pointer-events: none;
+}
+
+.hero-aurora {
+  pointer-events: none;
+}
+
+.hero-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(110px);
+  opacity: 0.35;
+  will-change: transform;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 60%);
+}
+
+.hero-blob-1 {
+  top: 10%;
+  left: 12%;
+  width: 22rem;
+  height: 22rem;
+  animation: heroFloat1 14s ease-in-out infinite;
+}
+
+.hero-blob-2 {
+  bottom: 8%;
+  right: 10%;
+  width: 26rem;
+  height: 26rem;
+  animation: heroFloat2 18s ease-in-out infinite;
+}
+
+.hero-blob-3 {
+  top: 40%;
+  left: 50%;
+  width: 18rem;
+  height: 18rem;
+  transform: translate(-50%, -50%);
+  animation: heroFloat3 22s ease-in-out infinite;
+}
+
+@keyframes heroFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(40px, -30px) scale(1.1); }
+}
+
+@keyframes heroFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-30px, 30px) scale(1.08); }
+}
+
+@keyframes heroFloat3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-45%, -55%) scale(1.15); }
+}
+
+/* Hero name uses solid silver with per-letter fade-in. Avoid background-clip:text
+   because some mobile GPUs render it transparent (caused name to disappear). */
+.hero-name {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-name-text {
+  display: inline-block;
+  filter: drop-shadow(0 6px 24px rgba(255, 255, 255, 0.08));
+}
+
+.animate-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: fadeInLetter 0.1s ease-out forwards;
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f8fafc 30%,
+    #cbd5e1 55%,
+    #94a3b8 75%,
+    #f8fafc 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  /* Fallback */
+  color: #f8fafc;
+}
+
+@keyframes fadeInLetter {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Role rotator */
+.hero-role {
+  min-height: 1.75rem;
+}
+
+.hero-role-item {
+  font-weight: 600;
+  background: linear-gradient(180deg, #f8fafc 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: heroRoleIn 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  color: #f8fafc; /* fallback */
+}
+
+@keyframes heroRoleIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-social {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+/* =====================================================
+   Cards & buttons (shared across sections)
+   ===================================================== */
+.project-card,
+.certificate-card,
+.skill-card,
+.contribution-graph-wrapper,
+.stat-card-blue,
+.stat-card-yellow,
+.stat-card-green,
+.stat-card-pink {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.project-card:hover,
+.certificate-card:hover,
+.skill-card:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 20px 60px -20px rgba(255, 255, 255, 0.08);
+}
+
+.skill-card {
+  --skill-glow: rgba(255, 255, 255, 0.08);
+}
+
+/* Buttons / pills unified glass white */
+.button-primary,
+.cta-button,
+.hero-button-secondary,
+.project-link,
+.cert-link,
+.contact-pill,
+.contact-mini-pill,
+.footer-up,
+.footer-built,
+.hero-social {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+}
+
+.cta-button {
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
+}
+
+.cta-button:hover {
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 255, 255, 0.06)
+  );
+}
+
+.cta-button-inner,
+.cta-button-inner * {
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+}
+
+/* Tag pills */
+.project-tag,
+.cert-date {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}
+
+/* Github stat numbers → chrome silver */
+.stat-card-blue .text-cyan-300,
+.stat-card-yellow .text-amber-300,
+.stat-card-green .text-emerald-300,
+.stat-card-pink .text-pink-300 {
+  background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #f8fafc;
+}
+
+/* Cert link */
+.cert-link {
+  color: #f8fafc;
+}
+
+.cert-link:hover {
+  color: #ffffff;
+}
+
+/* =====================================================
+   Contact section
+   ===================================================== */
+.contact-section {
+  color: #e2e8f0;
+}
+
+.contact-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  pointer-events: none;
+}
+
+.contact-marquee {
+  overflow: hidden;
+}
+
+.contact-marquee-track {
+  width: max-content;
+  animation: contactMarquee 35s linear infinite;
+}
+
+.contact-marquee:hover .contact-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes contactMarquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.contact-title {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #f8fafc 30%,
+    #cbd5e1 55%,
+    #94a3b8 75%,
+    #f8fafc 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 6px 24px rgba(255, 255, 255, 0.08));
+  letter-spacing: -0.04em;
+  color: #f8fafc; /* fallback */
+}
+
+.contact-bigtext {
+  line-height: 0.85;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.contact-bigtext-inner {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.18) 40%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.06);
+  filter: blur(0.3px);
+  pointer-events: none;
+}
+
+/* Footer back-to-top stays clickable above any decoration */
+.site-footer {
+  position: relative;
+  z-index: 100;
+}
+
+.site-footer > * {
+  position: relative;
+  z-index: 101;
+}
+
+.footer-up {
+  z-index: 102;
+}
+
+/* =====================================================
+   Project / certificate detail modal
+   ===================================================== */
+.project-modal-backdrop {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(20, 20, 20, 0.85) 0%,
+    rgba(0, 0, 0, 0.95) 70%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: modalFadeIn 0.25s ease;
+}
+
+.project-modal-backdrop * {
+  pointer-events: auto;
+}
+
+.project-modal {
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
+    linear-gradient(180deg, #0a0a0a 0%, #000000 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: modalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-modal-close,
+.project-modal-nav,
+.project-modal-thumb {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.project-modal-close,
+.project-modal-nav {
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.6);
+}
+
+.project-modal-thumb {
+  transition: all 0.2s ease;
+}
+
+.project-modal-img {
+  animation: modalImgFade 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalImgFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Subtle scrollbar inside modal */
+.project-modal ::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.project-modal ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+}
+
+.project-modal ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* =====================================================
+   Reduced motion
+   ===================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob,
+  .animate-orbit-right,
+  .animate-orbit-left,
+  .animate-letter,
+  .contact-marquee-track,
+  .hero-role-item {
+    animation: none !important;
+  }
+}
+
+/* =====================================================
+   Fallback when bg-clip:text isn't supported
+   ===================================================== */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .gradient-text,
+  .hero-role-item,
+  .contact-title,
+  .contact-bigtext-inner,
+  .animate-letter {
+    background: none !important;
+    -webkit-text-fill-color: #f8fafc !important;
+    color: #f8fafc !important;
+  }
 }
