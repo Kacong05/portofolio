@@ -52,7 +52,8 @@ function InstagramIcon() {
 export default function HeroSection() {
   const [roleIndex, setRoleIndex] = useState(0);
 
-  const fullName = 'Aditya\u00A0Dwi Hardiansyah';
+  const fullName = 'Aditya Dwi Hardiansyah';
+  const nameWords = ['Aditya Dwi', 'Hardiansyah'];
 
   // Role rotator
   useEffect(() => {
@@ -88,16 +89,46 @@ export default function HeroSection() {
         {/* Name */}
         <h1 className="hero-name relative mt-3 break-words text-[clamp(1.75rem,7vw,4rem)] font-extrabold leading-[1.05] tracking-tight">
           <span className="hero-name-text" aria-label={fullName}>
-            {fullName.split('').map((char, i) => {
-              if (char === ' ') return <span key={i}> </span>;
+            {nameWords.map((word, wIdx) => {
+              // Track absolute letter index across all words for stagger
+              const previousLetters = nameWords
+                .slice(0, wIdx)
+                .reduce((sum, w) => sum + w.length, 0);
+
               return (
                 <span
-                  key={i}
-                  aria-hidden="true"
-                  className="animate-letter"
-                  style={{ animationDelay: `${i * 0.06}s` }}
+                  key={wIdx}
+                  className="inline-block whitespace-normal"
+                  style={{ marginRight: wIdx < nameWords.length - 1 ? '0.3em' : 0 }}
                 >
-                  {char}
+                  {word.split('').map((char, i) => {
+                    if (char === ' ') {
+                      return (
+                        <span
+                          key={`s-${wIdx}-${i}`}
+                          aria-hidden="true"
+                          className="animate-letter"
+                          style={{
+                            animationDelay: `${(previousLetters + i) * 0.06}s`,
+                            display: 'inline-block',
+                            width: '0.25em',
+                          }}
+                        >
+                          {'\u00A0'}
+                        </span>
+                      );
+                    }
+                    return (
+                      <span
+                        key={`c-${wIdx}-${i}`}
+                        aria-hidden="true"
+                        className="animate-letter"
+                        style={{ animationDelay: `${(previousLetters + i) * 0.06}s` }}
+                      >
+                        {char}
+                      </span>
+                    );
+                  })}
                 </span>
               );
             })}
