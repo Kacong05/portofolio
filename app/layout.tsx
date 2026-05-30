@@ -9,7 +9,7 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-const SITE_URL = 'https://portofolio-adityadwih-dev.vercel.app';
+const SITE_URL = 'https://www.adityadh.my.id';
 const DESCRIPTION =
   'Portofolio Aditya Dwi Hardiansyah, Web Developer dari Jember Indonesia. Dibangun dengan Next.js, Laravel, dan React. Lihat project, sertifikat, dan cara menghubungi.';
 
