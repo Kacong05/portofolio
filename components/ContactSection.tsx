@@ -61,7 +61,7 @@ export default function ContactSection() {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
             {[
               { href: 'https://github.com/Kacong05', label: 'GitHub' },
-              { href: '#', label: 'LinkedIn' },
+              { href: 'https://www.linkedin.com/in/aditya-dwi-hardiansyah-902903412?utm_source=share_via&utm_content=profile&utm_medium=member_android', label: 'LinkedIn' },
               { href: 'https://www.instagram.com/adtya_dhr?igsh=MWUwZ3QwcjV5MmZ5cA==', label: 'Instagram' },
             ].map((s) => (
               <Link

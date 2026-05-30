@@ -180,7 +180,7 @@ export default function HeroSection() {
           <span className="hidden h-px w-10 bg-white/10 sm:block" />
           {[
             { href: 'https://github.com/Kacong05', label: 'GitHub', icon: <GithubIcon /> },
-            { href: '#', label: 'LinkedIn', icon: <LinkedinIcon /> },
+            { href: 'https://www.linkedin.com/in/aditya-dwi-hardiansyah-902903412?utm_source=share_via&utm_content=profile&utm_medium=member_android', label: 'LinkedIn', icon: <LinkedinIcon /> },
             { href: 'https://www.instagram.com/adtya_dhr?igsh=MWUwZ3QwcjV5MmZ5cA==', label: 'Instagram', icon: <InstagramIcon /> },
           ].map((s) => (
             <Link
