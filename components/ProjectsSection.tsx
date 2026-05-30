@@ -19,17 +19,54 @@ interface Project {
 
 const projects: Project[] = [
   {
+    title: 'LifeHub - Food Tracker',
+    description:
+      'Aplikasi web pencatat asupan makanan harian dengan laporan kalori mingguan dan dashboard admin.',
+    longDescription:
+      'LifeHub adalah aplikasi web untuk mencatat asupan makanan harian dan memantau pola gaya hidup sehat. Pengguna bisa mencatat sarapan, makan siang, makan malam, dan camilan, lalu melihat total kalori, nutrisi, dan progres mingguan terhadap target kalori pribadi. Dilengkapi dashboard admin untuk manajemen user, monitoring aktivitas, pengelolaan rekomendasi makanan, dan kritik & saran.',
+    features: [
+      'Autentikasi: sign up, login, ganti password',
+      'Profil pengguna: berat badan, tinggi badan, target kalori',
+      'Catatan harian: sarapan, makan siang, malam, camilan',
+      'Laporan mingguan: total kalori, rata-rata, hari tercapai',
+      'Form kritik & saran dari user',
+      'Admin: manajemen user dengan search & pagination',
+      'Admin: monitoring aktivitas user harian',
+      'Admin: pengelolaan rekomendasi makanan + upload gambar',
+      'Admin: export data user dan rekomendasi',
+    ],
+    tags: ['PHP', 'MySQL', 'HTML', 'CSS', 'JavaScript'],
+    liveUrl: '#',
+    repoUrl: 'https://github.com/Kacong05',
+    cover: '/images/project/lifehub/awal.png',
+    gallery: [
+      { src: '/images/project/lifehub/awal.png', alt: 'Landing page LifeHub' },
+      { src: '/images/project/lifehub/login.png', alt: 'Halaman login' },
+      { src: '/images/project/lifehub/buat-akun.png', alt: 'Halaman registrasi' },
+      { src: '/images/project/lifehub/catatan.png', alt: 'Catatan makanan harian' },
+      { src: '/images/project/lifehub/laporan.png', alt: 'Laporan kalori mingguan' },
+      { src: '/images/project/lifehub/profile.png', alt: 'Profil pengguna' },
+      { src: '/images/project/lifehub/kritik-user.png', alt: 'Form kritik & saran' },
+      { src: '/images/project/lifehub/admin/manajemen-user.png', alt: 'Admin - Manajemen User' },
+      { src: '/images/project/lifehub/admin/rekomendasi.png', alt: 'Admin - Pengelolaan Rekomendasi' },
+      { src: '/images/project/lifehub/admin/kritik-saran.png', alt: 'Admin - Kritik & Saran' },
+    ],
+    imageAlt: 'LifeHub food tracker web app',
+  },
+  {
     title: 'Toko Kunci - Sistem Manajemen',
     description:
       'Aplikasi web manajemen toko kunci dengan fitur transaksi penjualan, pengelolaan stok produk, dan laporan penjualan.',
     longDescription:
       'Aplikasi web manajemen toko kunci yang dibangun untuk memenuhi kebutuhan operasional toko sehari-hari. Sistem ini menyediakan dashboard admin yang efisien untuk mengelola transaksi penjualan, stok produk, dan menghasilkan laporan penjualan secara otomatis. Dibangun dengan Laravel sebagai backend dan MySQL sebagai database, aplikasi ini mempermudah pemilik toko dalam memantau performa bisnis.',
     features: [
-      'Manajemen produk dan kategori',
-      'Sistem transaksi penjualan dengan invoice',
-      'Pengelolaan stok dengan notifikasi stok menipis',
-      'Laporan penjualan harian, bulanan, dan tahunan',
-      'Multi-user dengan role admin dan kasir',
+      'Manajemen Pengguna (Admin & User)',
+      'Pemesanan Kunci',
+      'Rating & Review',
+      'Kontak & Pesan',
+      'Notifikasi Real-time',
+      'Dashboard Admin',
+      'Peta Lokasi Toko',
     ],
     tags: ['Laravel', 'PHP', 'MySQL'],
     liveUrl: '#',
@@ -56,11 +93,10 @@ const projects: Project[] = [
     longDescription:
       'Platform pemesanan online yang memungkinkan pelanggan memesan layanan pembuatan website secara langsung. Dilengkapi dengan katalog paket, sistem booking, dan dashboard untuk tracking progress proyek. Antarmuka modern dan responsif memberikan pengalaman pengguna yang nyaman di semua perangkat.',
     features: [
-      'Katalog paket layanan dengan detail harga',
-      'Sistem booking dan pemesanan online',
-      'Dashboard tracking progress proyek',
-      'Notifikasi real-time untuk update status',
-      'Halaman portfolio dan testimonial',
+      'UI/UX Design Services: Layanan desain antarmuka profesional',
+      'Web Development Services: Pengembangan website modern dan SEO-friendly',
+      'Form Pemesanan: Form untuk mengajukan pesanan layanan',
+      'Kontak Integrasi: Integrasi WhatsApp untuk komunikasi langsung',
     ],
     tags: ['React', 'Tailwind CSS', 'Node.js'],
     liveUrl: '#',
@@ -382,7 +418,7 @@ export default function ProjectsSection() {
         <div className="absolute -right-24 bottom-24 h-72 w-72 rounded-full bg-fuchsia-500/10 blur-[120px]" />
       </div>
 
-      <div className="relative mx-auto max-w-4xl">
+      <div className="relative mx-auto max-w-6xl">
         {/* Heading */}
         <div className="mb-10 text-center">
           <h2 className="gradient-text text-2xl font-bold md:text-4xl">
@@ -394,7 +430,7 @@ export default function ProjectsSection() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => (
             <article
               key={p.title}
@@ -407,7 +443,7 @@ export default function ProjectsSection() {
                   src={p.cover}
                   alt={p.imageAlt}
                   fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
                 />
                 {/* Gradient overlay for legibility */}
