@@ -125,6 +125,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={poppins.variable}>
+      <head>
+        <meta
+          name="google-site-verification"
+          content="Rt3cFqaepu3Z_vA2iC82MqrDKjrYFaiKIumB5cqyk88"
+        />
+      </head>
       <body className="min-h-screen bg-black text-slate-200">
         <script
           type="application/ld+json"
