@@ -3,15 +3,15 @@ import type { MetadataRoute } from 'next';
 const SITE_URL = 'https://www.adityadh.my.id';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
-  // Single-page site with anchor sections
-  const sections = ['', '#about', '#projects', '#skills', '#github', '#certificates', '#contact'];
-
-  return sections.map((section) => ({
-    url: `${SITE_URL}/${section}`,
-    lastModified,
-    changeFrequency: section === '' ? 'monthly' : 'yearly',
-    priority: section === '' ? 1 : 0.7,
-  }));
+  // Single-page portfolio — only the canonical URL is indexable.
+  // Anchor sections (#about, #projects, ...) are not separate pages and
+  // Google rejects them in sitemaps.
+  return [
+    {
+      url: SITE_URL,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 1,
+    },
+  ];
 }
