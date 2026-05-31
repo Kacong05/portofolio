@@ -94,22 +94,6 @@ select,
   color: #e2e8f0;
 }
 
-/* =====================================================
-   Scroll perf: skip rendering sections that are off-screen.
-   `content-visibility: auto` lets the browser drop layout +
-   paint cost for sections the user can't see. The reserved
-   intrinsic-size keeps the scrollbar stable.
-   ===================================================== */
-#about,
-.projects-section,
-#skills,
-.github-section,
-.certificates-section,
-.contact-section {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 1200px;
-}
-
 /* Cards: isolate layout & paint so hover/animation in one card
    doesn't reflow neighbours. Big win on lists with many items. */
 .project-card,
