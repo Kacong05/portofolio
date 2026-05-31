@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { getGitHubStats, type GitHubStats } from '@/lib/github';
 import GitHubStatCard from './GitHubStatCard';
+import LazyExternalImage from './LazyExternalImage';
 
 const USERNAME = 'Kacong05';
 
@@ -153,23 +153,21 @@ export default async function GitHubSection() {
         {/* GitHub readme stats + streak */}
         <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="group relative overflow-hidden rounded-2xl bg-slate-900/60 p-3 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:ring-cyan-400/30">
-            <Image
+            <LazyExternalImage
               src={`https://github-readme-stats-sigma-five.vercel.app/api?username=${USERNAME}&show_icons=true&theme=radical&hide_border=true&bg_color=0d1117&title_color=58a6ff&icon_color=1f6feb&text_color=c9d1d9`}
               alt="GitHub Stats"
               width={500}
               height={195}
-              unoptimized
-              className="h-auto w-full rounded-xl"
+              className="rounded-xl overflow-hidden"
             />
           </div>
           <div className="group relative overflow-hidden rounded-2xl bg-slate-900/60 p-3 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:ring-fuchsia-400/30">
-            <Image
+            <LazyExternalImage
               src={`https://streak-stats.demolab.com?user=${USERNAME}&theme=radical&hide_border=true&background=0d1117&stroke=58a6ff&ring=58a6ff&fire=ff6b6b&currStreakLabel=c9d1d9`}
               alt="GitHub Streak"
               width={500}
               height={195}
-              unoptimized
-              className="h-auto w-full rounded-xl"
+              className="rounded-xl overflow-hidden"
             />
           </div>
         </div>
@@ -193,12 +191,11 @@ export default async function GitHubSection() {
               Last 12 months
             </span>
           </div>
-          <Image
+          <LazyExternalImage
             src={`https://ghchart.rshah.org/58a6ff/${USERNAME}`}
             alt="GitHub Contribution Graph"
             width={1000}
             height={160}
-            unoptimized
             className="mx-auto w-full max-w-4xl rounded-lg"
           />
         </div>
