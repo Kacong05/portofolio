@@ -9,7 +9,16 @@ body {
 }
 
 html {
+  /* Smooth-scroll only when the user clicks an anchor link, not for
+     wheel/touch scrolling (some browsers slow that down too). */
   scroll-behavior: smooth;
+}
+
+/* Disable smooth-scroll for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 /* Avoid the fixed header overlapping headings when navigating to anchors */
@@ -83,6 +92,66 @@ select,
   position: relative;
   background-color: #000000 !important;
   color: #e2e8f0;
+}
+
+/* =====================================================
+   Scroll perf: skip rendering sections that are off-screen.
+   `content-visibility: auto` lets the browser drop layout +
+   paint cost for sections the user can't see. The reserved
+   intrinsic-size keeps the scrollbar stable.
+   ===================================================== */
+#about,
+.projects-section,
+#skills,
+.github-section,
+.certificates-section,
+.contact-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1200px;
+}
+
+/* Cards: isolate layout & paint so hover/animation in one card
+   doesn't reflow neighbours. Big win on lists with many items. */
+.project-card,
+.certificate-card,
+.skill-card,
+.stat-card-blue,
+.stat-card-yellow,
+.stat-card-green,
+.stat-card-pink,
+.contribution-graph-wrapper,
+.info-card-blue,
+.info-card-green,
+.info-card-purple,
+.info-card-brown {
+  contain: layout paint;
+}
+
+/* Drop redundant backdrop-blur on cards. They sit on a solid black
+   background where blur has no visual effect but still forces a
+   backdrop pass on every scroll frame. Header / mobile menu /
+   floating buttons keep their blur because they overlay content. */
+.project-card,
+.certificate-card,
+.skill-card,
+.stat-card-blue,
+.stat-card-yellow,
+.stat-card-green,
+.stat-card-pink,
+.contribution-graph-wrapper {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Animated decorative elements run on the GPU compositor so they
+   don't trigger layout/paint while the user scrolls. */
+.hero-blob,
+.contact-marquee-track,
+.animate-orbit-right,
+.animate-orbit-left {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .hero-section::before,
