@@ -1,70 +1,15 @@
-'use client';
-
-import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getGitHubStats, type GitHubStats } from '@/lib/github';
+import GitHubStatCard from './GitHubStatCard';
 
-interface GitHubStats {
-  repos: number;
-  stars: number;
-  gists: number;
-  followers: number;
-}
+const USERNAME = 'Kacong05';
 
-type AccentKey = 'cyan' | 'amber' | 'emerald' | 'pink';
-
-interface StatConfig {
-  key: keyof GitHubStats;
-  label: string;
-  description: string;
-  accent: AccentKey;
-  legacyClass: string;
-  icon: React.ReactNode;
-}
-
-const ACCENTS: Record<
-  AccentKey,
-  {
-    text: string;
-    iconBg: string;
-    ring: string;
-    glow: string;
-    bar: string;
-    dot: string;
-  }
-> = {
-  cyan: {
-    text: 'text-cyan-300',
-    iconBg: 'bg-cyan-400/10 ring-1 ring-cyan-400/30 text-cyan-300',
-    ring: 'group-hover:ring-cyan-400/40',
-    glow: 'group-hover:shadow-[0_20px_60px_-20px_rgba(34,211,238,0.45)]',
-    bar: 'from-cyan-400 to-sky-500',
-    dot: 'bg-cyan-400',
-  },
-  amber: {
-    text: 'text-amber-300',
-    iconBg: 'bg-amber-400/10 ring-1 ring-amber-400/30 text-amber-300',
-    ring: 'group-hover:ring-amber-400/40',
-    glow: 'group-hover:shadow-[0_20px_60px_-20px_rgba(251,191,36,0.45)]',
-    bar: 'from-amber-400 to-orange-500',
-    dot: 'bg-amber-400',
-  },
-  emerald: {
-    text: 'text-emerald-300',
-    iconBg: 'bg-emerald-400/10 ring-1 ring-emerald-400/30 text-emerald-300',
-    ring: 'group-hover:ring-emerald-400/40',
-    glow: 'group-hover:shadow-[0_20px_60px_-20px_rgba(52,211,153,0.45)]',
-    bar: 'from-emerald-400 to-teal-500',
-    dot: 'bg-emerald-400',
-  },
-  pink: {
-    text: 'text-pink-300',
-    iconBg: 'bg-pink-400/10 ring-1 ring-pink-400/30 text-pink-300',
-    ring: 'group-hover:ring-pink-400/40',
-    glow: 'group-hover:shadow-[0_20px_60px_-20px_rgba(244,114,182,0.45)]',
-    bar: 'from-pink-400 to-fuchsia-500',
-    dot: 'bg-pink-400',
-  },
+const STAT_MAX: Record<keyof GitHubStats, number> = {
+  repos: 50,
+  stars: 100,
+  gists: 50,
+  followers: 100,
 };
 
 function RepoIcon() {
@@ -126,191 +71,45 @@ function ArrowUpRightIcon() {
   );
 }
 
-function useCountUp(target: number, duration = 1200) {
-  const [value, setValue] = useState(0);
-  const prevTarget = useRef(0);
-
-  useEffect(() => {
-    if (target === prevTarget.current) return;
-    prevTarget.current = target;
-
-    if (target === 0) {
-      setValue(0);
-      return;
-    }
-
-    let raf = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setValue(Math.round(eased * target));
-      if (t < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, duration]);
-
-  return value;
-}
-
-function StatCard({
-  config,
-  value,
-  max,
-}: {
-  config: StatConfig;
-  value: number;
-  max: number;
-}) {
-  const accent = ACCENTS[config.accent];
-  const animated = useCountUp(value);
-  const barWidth = Math.min((value / max) * 100, 100);
-
-  return (
-    <div
-      className={`${config.legacyClass} group relative overflow-hidden rounded-2xl bg-slate-900/60 p-5 backdrop-blur-xl ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 ${accent.ring} ${accent.glow}`}
-    >
-      {/* corner glow */}
-      <div
-        className={`pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full opacity-30 blur-3xl transition-opacity duration-300 group-hover:opacity-60 ${accent.dot}`}
-      />
-
-      <div className="relative flex items-center justify-between">
-        <span className="text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
-          {config.label}
-        </span>
-        <span
-          className={`flex h-9 w-9 items-center justify-center rounded-xl ${accent.iconBg}`}
-        >
-          {config.icon}
-        </span>
-      </div>
-
-      <div className="relative mt-5 flex items-end gap-2">
-        <span className={`text-4xl font-bold tabular-nums ${accent.text}`}>
-          {animated}
-        </span>
-        <span className="mb-1 text-xs font-medium text-slate-400">total</span>
-      </div>
-
-      <p className="relative mt-1 text-xs text-slate-400">{config.description}</p>
-
-      <div className="relative mt-5 h-1 w-full overflow-hidden rounded-full bg-white/5">
-        <div
-          className={`h-full rounded-full bg-gradient-to-r ${accent.bar} transition-all duration-1000 ease-out`}
-          style={{ width: `${barWidth}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-const STAT_CONFIG: StatConfig[] = [
+const STAT_CARDS = [
   {
-    key: 'repos',
+    key: 'repos' as const,
     label: 'Repositories',
     description: 'Public repositories',
-    accent: 'cyan',
+    accent: 'cyan' as const,
     legacyClass: 'stat-card-blue',
     icon: <RepoIcon />,
   },
   {
-    key: 'stars',
+    key: 'stars' as const,
     label: 'Stars',
     description: 'Received on projects',
-    accent: 'amber',
+    accent: 'amber' as const,
     legacyClass: 'stat-card-yellow',
     icon: <StarIcon />,
   },
   {
-    key: 'gists',
+    key: 'gists' as const,
     label: 'Gists',
     description: 'Public gists',
-    accent: 'emerald',
+    accent: 'emerald' as const,
     legacyClass: 'stat-card-green',
     icon: <GistIcon />,
   },
   {
-    key: 'followers',
+    key: 'followers' as const,
     label: 'Followers',
     description: 'GitHub followers',
-    accent: 'pink',
+    accent: 'pink' as const,
     legacyClass: 'stat-card-pink',
     icon: <UsersIcon />,
   },
 ];
 
-const STAT_MAX: Record<keyof GitHubStats, number> = {
-  repos: 50,
-  stars: 100,
-  gists: 50,
-  followers: 100,
-};
-
-export default function GitHubSection() {
-  const [stats, setStats] = useState<GitHubStats>({
-    repos: 4,
-    stars: 0,
-    gists: 0,
-    followers: 0,
-  });
-
-  const username = 'Kacong05';
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function fetchGitHubStats() {
-      try {
-        const [userResponse, reposResponse] = await Promise.all([
-          fetch(`https://api.github.com/users/${username}`, {
-            headers: { Accept: 'application/vnd.github+json' },
-            cache: 'no-store',
-          }),
-          fetch(
-            `https://api.github.com/users/${username}/repos?per_page=100`,
-            {
-              headers: { Accept: 'application/vnd.github+json' },
-              cache: 'no-store',
-            }
-          ),
-        ]);
-
-        if (!userResponse.ok || !reposResponse.ok) {
-          // Likely rate-limited (403) or offline; keep previous stats
-          return;
-        }
-
-        const userData = await userResponse.json();
-        const reposData = await reposResponse.json();
-
-        const totalStars = Array.isArray(reposData)
-          ? reposData.reduce(
-              (acc: number, repo: { stargazers_count?: number }) =>
-                acc + (repo.stargazers_count ?? 0),
-              0
-            )
-          : 0;
-
-        if (cancelled) return;
-
-        setStats({
-          repos: userData.public_repos ?? 0,
-          stars: totalStars,
-          gists: userData.public_gists ?? 0,
-          followers: userData.followers ?? 0,
-        });
-      } catch (error) {
-        console.error('Error fetching GitHub stats:', error);
-      }
-    }
-
-    fetchGitHubStats();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+export default async function GitHubSection() {
+  // Server-side fetch with 1-hour ISR cache. All visitors share the same
+  // response, keeping us safely under GitHub's 60 req/h unauthenticated limit.
+  const stats = await getGitHubStats(USERNAME);
 
   return (
     <section
@@ -337,12 +136,16 @@ export default function GitHubSection() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {STAT_CONFIG.map((config) => (
-            <StatCard
-              key={config.key}
-              config={config}
-              value={stats[config.key]}
-              max={STAT_MAX[config.key]}
+          {STAT_CARDS.map((card) => (
+            <GitHubStatCard
+              key={card.key}
+              label={card.label}
+              description={card.description}
+              accent={card.accent}
+              legacyClass={card.legacyClass}
+              icon={card.icon}
+              value={stats[card.key]}
+              max={STAT_MAX[card.key]}
             />
           ))}
         </div>
@@ -351,7 +154,7 @@ export default function GitHubSection() {
         <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="group relative overflow-hidden rounded-2xl bg-slate-900/60 p-3 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:ring-cyan-400/30">
             <Image
-              src={`https://github-readme-stats-sigma-five.vercel.app/api?username=${username}&show_icons=true&theme=radical&hide_border=true&bg_color=0d1117&title_color=58a6ff&icon_color=1f6feb&text_color=c9d1d9`}
+              src={`https://github-readme-stats-sigma-five.vercel.app/api?username=${USERNAME}&show_icons=true&theme=radical&hide_border=true&bg_color=0d1117&title_color=58a6ff&icon_color=1f6feb&text_color=c9d1d9`}
               alt="GitHub Stats"
               width={500}
               height={195}
@@ -361,7 +164,7 @@ export default function GitHubSection() {
           </div>
           <div className="group relative overflow-hidden rounded-2xl bg-slate-900/60 p-3 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:ring-fuchsia-400/30">
             <Image
-              src={`https://streak-stats.demolab.com?user=${username}&theme=radical&hide_border=true&background=0d1117&stroke=58a6ff&ring=58a6ff&fire=ff6b6b&currStreakLabel=c9d1d9`}
+              src={`https://streak-stats.demolab.com?user=${USERNAME}&theme=radical&hide_border=true&background=0d1117&stroke=58a6ff&ring=58a6ff&fire=ff6b6b&currStreakLabel=c9d1d9`}
               alt="GitHub Streak"
               width={500}
               height={195}
@@ -382,7 +185,7 @@ export default function GitHubSection() {
                 Contribution Activity
               </h3>
               <p className="text-xs text-slate-400">
-                Past year of contributions on @{username}
+                Past year of contributions on @{USERNAME}
               </p>
             </div>
             <span className="hidden items-center gap-2 rounded-full bg-white/5 px-3 py-1 text-[10px] font-medium uppercase tracking-widest text-slate-400 ring-1 ring-white/10 sm:inline-flex">
@@ -391,7 +194,7 @@ export default function GitHubSection() {
             </span>
           </div>
           <Image
-            src={`https://ghchart.rshah.org/58a6ff/${username}`}
+            src={`https://ghchart.rshah.org/58a6ff/${USERNAME}`}
             alt="GitHub Contribution Graph"
             width={1000}
             height={160}
@@ -403,7 +206,7 @@ export default function GitHubSection() {
         {/* CTA */}
         <div className="mt-12 flex justify-center">
           <Link
-            href={`https://github.com/${username}`}
+            href={`https://github.com/${USERNAME}`}
             target="_blank"
             rel="noopener noreferrer"
             className="cta-button group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-purple-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-500/40"
