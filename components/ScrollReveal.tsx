@@ -9,9 +9,9 @@ interface ScrollRevealProps {
 }
 
 /**
- * Wraps any element so it slides up + fades in the first time it enters the
- * viewport. Render a fallback "visible" state if IntersectionObserver isn't
- * available, and a 1.5s safety timeout so the content always shows up.
+ * Smooth scroll-triggered reveal: slides up from below + fades in.
+ * Triggers a bit before the element fully enters the viewport so the
+ * animation reads as "responding to the scroll" rather than popping in.
  */
 export default function ScrollReveal({
   children,
@@ -30,9 +30,9 @@ export default function ScrollReveal({
       return;
     }
 
-    // If the element is already on screen at mount (above the fold), reveal immediately.
+    // Already on screen at mount? Reveal immediately.
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight) {
+    if (rect.top < window.innerHeight - 40) {
       setShown(true);
       return;
     }
@@ -44,12 +44,18 @@ export default function ScrollReveal({
           obs.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
+      {
+        // Start as soon as 5 % of the card peeks above the fold,
+        // and pre-trigger 15 % above the bottom edge so the slide-up
+        // feels coupled with the scroll.
+        threshold: 0.05,
+        rootMargin: '0px 0px -15% 0px',
+      }
     );
     obs.observe(el);
 
-    // Safety net: always reveal after 1.5s, even if observer never fires.
-    const timer = window.setTimeout(() => setShown(true), 1500);
+    // Safety: always reveal after 2 s no matter what.
+    const timer = window.setTimeout(() => setShown(true), 2000);
 
     return () => {
       obs.disconnect();
@@ -63,8 +69,13 @@ export default function ScrollReveal({
       className={className}
       style={{
         opacity: shown ? 1 : 0,
-        transform: shown ? 'translateY(0)' : 'translateY(40px)',
-        transition: `opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+        transform: shown ? 'translate3d(0, 0, 0)' : 'translate3d(0, 80px, 0)',
+        // Long, gentle ease-out for the slide. Opacity finishes a hair faster
+        // so the card feels "settling" rather than "still arriving".
+        transition: [
+          `opacity 900ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+          `transform 1100ms cubic-bezier(0.22, 1, 0.36, 1) ${delay}ms`,
+        ].join(', '),
         willChange: 'opacity, transform',
       }}
     >

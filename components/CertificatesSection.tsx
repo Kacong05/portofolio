@@ -172,7 +172,7 @@ export default function CertificatesSection() {
           {certificates.map((c, idx) => (
             <ScrollReveal
               key={c.title}
-              delay={(idx % 3) * 120}
+              delay={(idx % 3) * 150}
               className="h-full"
             >
               <article

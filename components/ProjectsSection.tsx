@@ -435,7 +435,7 @@ export default function ProjectsSection() {
           {projects.map((p, idx) => (
             <ScrollReveal
               key={p.title}
-              delay={(idx % 3) * 120}
+              delay={(idx % 3) * 150}
               className="h-full"
             >
               <article
