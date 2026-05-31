@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import ScrollReveal from './ScrollReveal';
 
 interface Certificate {
   title: string;
@@ -168,12 +169,16 @@ export default function CertificatesSection() {
 
         {/* Grid */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {certificates.map((c) => (
-            <article
+          {certificates.map((c, idx) => (
+            <ScrollReveal
               key={c.title}
-              onClick={() => setActiveCert(c)}
-              className="certificate-card group relative h-full cursor-pointer overflow-hidden rounded-2xl bg-slate-900/60 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:ring-white/30"
+              delay={(idx % 3) * 120}
+              className="h-full"
             >
+              <article
+                onClick={() => setActiveCert(c)}
+                className="certificate-card group relative h-full cursor-pointer overflow-hidden rounded-2xl bg-slate-900/60 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:ring-white/30"
+              >
               {/* Top accent bar */}
               <span className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
 
@@ -216,7 +221,8 @@ export default function CertificatesSection() {
                   </span>
                 </div>
               </div>
-            </article>
+              </article>
+            </ScrollReveal>
           ))}
         </div>
       </div>

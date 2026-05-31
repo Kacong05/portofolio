@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import ScrollReveal from './ScrollReveal';
 
 interface Project {
   title: string;
@@ -431,12 +432,16 @@ export default function ProjectsSection() {
 
         {/* Grid */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((p) => (
-            <article
+          {projects.map((p, idx) => (
+            <ScrollReveal
               key={p.title}
-              onClick={() => setActiveProject(p)}
-              className="project-card group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl bg-slate-900/60 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:ring-white/30"
+              delay={(idx % 3) * 120}
+              className="h-full"
             >
+              <article
+                onClick={() => setActiveProject(p)}
+                className="project-card group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl bg-slate-900/60 ring-1 ring-white/10 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:ring-white/30"
+              >
               {/* Cover */}
               <div className="relative aspect-[16/9] w-full overflow-hidden">
                 <Image
@@ -491,7 +496,8 @@ export default function ProjectsSection() {
                   </span>
                 </div>
               </div>
-            </article>
+              </article>
+            </ScrollReveal>
           ))}
         </div>
       </div>
