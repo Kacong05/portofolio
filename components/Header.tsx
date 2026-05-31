@@ -40,6 +40,28 @@ function CloseIcon() {
   );
 }
 
+/**
+ * Handle in-page anchor click manually so we can:
+ * 1. Smooth-scroll to the target.
+ * 2. Replace (not push) the hash so back/forward history stays clean and
+ *    repeated clicks never stack into `#home#about#projects`.
+ */
+function scrollToHash(href: string) {
+  if (!href.startsWith('#')) return;
+  const id = href.slice(1);
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Replace, not push, so the URL stays clean.
+  if (id === 'home') {
+    history.replaceState(null, '', window.location.pathname);
+  } else {
+    history.replaceState(null, '', `#${id}`);
+  }
+}
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -80,6 +102,15 @@ export default function Header() {
     };
   }, [mobileOpen]);
 
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    e.preventDefault();
+    setMobileOpen(false);
+    scrollToHash(href);
+  };
+
   return (
     <header
       className={`site-header fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -88,14 +119,18 @@ export default function Header() {
     >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         {/* Logo */}
-        <Link href="#home" className="site-logo group inline-flex items-center gap-2">
+        <a
+          href="#home"
+          onClick={(e) => handleNavClick(e, '#home')}
+          className="site-logo group inline-flex items-center gap-2"
+        >
           <span className="site-logo-mark inline-flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-slate-950">
             AD
           </span>
           <span className="hidden text-sm font-semibold tracking-wide text-slate-200 sm:inline">
             Aditya<span className="text-slate-300">.dev</span>
           </span>
-        </Link>
+        </a>
 
         {/* Desktop nav */}
         <ul className="site-nav hidden items-center gap-1 rounded-full border border-white/10 bg-slate-900/80 px-1.5 py-1.5 backdrop-blur-xl shadow-lg shadow-black/20 md:flex">
@@ -104,8 +139,9 @@ export default function Header() {
             const isActive = activeSection === id;
             return (
               <li key={link.href}>
-                <Link
+                <a
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className={`site-nav-link relative inline-flex items-center rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
                     isActive
                       ? 'site-nav-link-active text-white'
@@ -114,7 +150,7 @@ export default function Header() {
                 >
                   {isActive && <span className="site-nav-pill" aria-hidden="true" />}
                   <span className="relative">{link.label}</span>
-                </Link>
+                </a>
               </li>
             );
           })}
@@ -122,7 +158,6 @@ export default function Header() {
 
         {/* Right actions */}
         <div className="flex items-center gap-2">
-          {/* WhatsApp button */}
           <Link
             href="https://wa.me/6285708779638"
             target="_blank"
@@ -133,7 +168,6 @@ export default function Header() {
             <WhatsAppIcon />
           </Link>
 
-          {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
@@ -145,7 +179,7 @@ export default function Header() {
         </div>
       </nav>
 
-      {/* Mobile menu overlay (rendered only when open so phantom tap targets can't exist) */}
+      {/* Mobile menu overlay */}
       {mobileOpen && (
         <>
           <div
@@ -160,9 +194,9 @@ export default function Header() {
                 const isActive = activeSection === id;
                 return (
                   <li key={link.href}>
-                    <Link
+                    <a
                       href={link.href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={(e) => handleNavClick(e, link.href)}
                       className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm transition-colors ${
                         isActive
                           ? 'bg-white/10 text-white'
@@ -173,7 +207,7 @@ export default function Header() {
                       {isActive && (
                         <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
                       )}
-                    </Link>
+                    </a>
                   </li>
                 );
               })}
