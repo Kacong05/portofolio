@@ -59,12 +59,13 @@ interface StatCardProps {
   max: number;
 }
 
-function useCountUp(target: number, duration = 1200) {
+function useCountUp(target: number, duration = 1200, enabled = true) {
   const [value, setValue] = useState(0);
   const prevTarget = useRef(0);
 
   useEffect(() => {
-    if (target === prevTarget.current) return;
+    if (!enabled) return;
+    if (target === prevTarget.current && value === target) return;
     prevTarget.current = target;
 
     if (target === 0) {
@@ -82,7 +83,7 @@ function useCountUp(target: number, duration = 1200) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, duration]);
+  }, [target, duration, enabled, value]);
 
   return value;
 }
@@ -97,11 +98,44 @@ export default function GitHubStatCard({
   max,
 }: StatCardProps) {
   const tokens = ACCENTS[accent];
-  const animated = useCountUp(value);
-  const barWidth = Math.min((value / max) * 100, 100);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return;
+    }
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+
+    // Safety: always trigger after 2s
+    const timer = window.setTimeout(() => setInView(true), 2000);
+
+    return () => {
+      obs.disconnect();
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  const animated = useCountUp(value, 1200, inView);
+  const barWidth = inView ? Math.min((value / max) * 100, 100) : 0;
 
   return (
     <div
+      ref={cardRef}
       className={`${legacyClass} group relative overflow-hidden rounded-2xl bg-slate-900/60 p-5 backdrop-blur-xl ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 ${tokens.ring} ${tokens.glow}`}
     >
       <div
