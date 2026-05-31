@@ -198,8 +198,8 @@ function StatCard({
 
       <div className="relative mt-5 h-1 w-full overflow-hidden rounded-full bg-white/5">
         <div
-          className={`h-full rounded-full bg-gradient-to-r ${accent.bar} transition-all duration-1000 ease-out`}
-          style={{ width: `${barWidth}%` }}
+          className={`h-full w-full origin-left rounded-full bg-gradient-to-r ${accent.bar} transition-transform duration-1000 ease-out`}
+          style={{ transform: `scaleX(${Math.min(barWidth / 100, 1)})` }}
         />
       </div>
     </div>
