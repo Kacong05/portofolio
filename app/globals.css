@@ -21,6 +21,21 @@ html {
   }
 }
 
+/* Mobile performance: reduce heavy effects */
+@media (max-width: 768px) {
+  /* Reduce backdrop blur for better scroll performance on mobile */
+  .backdrop-blur-xl,
+  section .backdrop-blur-xl {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Optimize ambient glow blur on mobile */
+  .pointer-events-none.absolute.inset-0 .blur-\[120px\] {
+    filter: blur(60px);
+  }
+}
+
 /* Avoid the fixed header overlapping headings when navigating to anchors */
 section[id] {
   scroll-margin-top: 80px;
@@ -598,48 +613,53 @@ select,
 }
 
 /* =====================================================
-   Scroll Reveal Animations
+   Scroll Reveal Animations - Optimized for Mobile
    ===================================================== */
 
 /* Base state for scroll reveal - hidden and positioned below */
+/* Using translate3d for GPU acceleration on mobile */
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translate3d(0, 40px, 0);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  contain: layout style;
 }
 
 /* Revealed state */
 .scroll-reveal.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 /* Staggered animation delays for children */
 .scroll-reveal-stagger > * {
   opacity: 0;
-  transform: translateY(40px) scale(0.95);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translate3d(0, 30px, 0) scale(0.96);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  contain: layout style;
 }
 
 .scroll-reveal-stagger.is-visible > * {
   opacity: 1;
-  transform: translateY(0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
-/* Individual stagger delays */
+/* Individual stagger delays - reduced for mobile */
 .scroll-reveal-stagger > *:nth-child(1) { transition-delay: 0ms; }
-.scroll-reveal-stagger > *:nth-child(2) { transition-delay: 100ms; }
-.scroll-reveal-stagger > *:nth-child(3) { transition-delay: 200ms; }
-.scroll-reveal-stagger > *:nth-child(4) { transition-delay: 300ms; }
-.scroll-reveal-stagger > *:nth-child(5) { transition-delay: 400ms; }
-.scroll-reveal-stagger > *:nth-child(6) { transition-delay: 500ms; }
-.scroll-reveal-stagger > *:nth-child(7) { transition-delay: 600ms; }
-.scroll-reveal-stagger > *:nth-child(8) { transition-delay: 700ms; }
-.scroll-reveal-stagger > *:nth-child(9) { transition-delay: 800ms; }
+.scroll-reveal-stagger > *:nth-child(2) { transition-delay: 80ms; }
+.scroll-reveal-stagger > *:nth-child(3) { transition-delay: 160ms; }
+.scroll-reveal-stagger > *:nth-child(4) { transition-delay: 240ms; }
+.scroll-reveal-stagger > *:nth-child(5) { transition-delay: 320ms; }
+.scroll-reveal-stagger > *:nth-child(6) { transition-delay: 400ms; }
+.scroll-reveal-stagger > *:nth-child(7) { transition-delay: 480ms; }
+.scroll-reveal-stagger > *:nth-child(8) { transition-delay: 560ms; }
+.scroll-reveal-stagger > *:nth-child(9) { transition-delay: 640ms; }
 
 /* Reduced motion - instant reveal */
 @media (prefers-reduced-motion: reduce) {
@@ -648,6 +668,17 @@ select,
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* Mobile optimization - smoother scroll on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .scroll-reveal {
+    transition-duration: 0.5s;
+  }
+
+  .scroll-reveal-stagger > * {
+    transition-duration: 0.5s;
   }
 }
 

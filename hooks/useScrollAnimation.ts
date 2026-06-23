@@ -11,7 +11,7 @@ export function useScrollAnimation<T extends HTMLElement>(
 ) {
   const {
     threshold = 0.1,
-    rootMargin = '0px 0px -50px 0px',
+    rootMargin = '0px 0px -80px 0px',
     triggerOnce = true,
   } = options;
 
@@ -33,7 +33,10 @@ export function useScrollAnimation<T extends HTMLElement>(
           setIsVisible(false);
         }
       },
-      { threshold, rootMargin }
+      {
+        threshold,
+        rootMargin,
+      }
     );
 
     observer.observe(element);
