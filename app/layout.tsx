@@ -7,6 +7,7 @@ const poppins = Poppins({
   subsets: ['latin'],
   variable: '--font-poppins',
   display: 'swap',
+  preload: true,
 });
 
 const SITE_URL = 'https://www.adityadh.my.id';

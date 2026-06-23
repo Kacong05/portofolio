@@ -30,9 +30,44 @@ html {
     -webkit-backdrop-filter: blur(8px);
   }
 
-  /* Optimize ambient glow blur on mobile */
-  .pointer-events-none.absolute.inset-0 .blur-\[120px\] {
+  /* Optimize hero blobs blur on mobile - MAJOR performance boost */
+  .hero-blob {
+    filter: blur(60px) !important;
+    opacity: 0.2;
+  }
+
+  /* Reduce section ambient blur */
+  .projects-section .blur-\[120px\] {
     filter: blur(60px);
+  }
+  .certificates-section .blur-\[120px\] {
+    filter: blur(60px);
+  }
+  section#skills .blur-\[120px\] {
+    filter: blur(60px);
+  }
+
+  /* Disable complex hover effects on mobile - saves paint cycles */
+  .info-card-blue,
+  .info-card-green,
+  .info-card-purple,
+  .info-card-brown {
+    transition: none !important;
+  }
+
+  /* Optimize grid for mobile - reduce reflows */
+  .skill-card,
+  .project-card,
+  .certificate-card {
+    contain: layout style;
+  }
+}
+
+/* Content visibility - helps browser skip rendering off-screen sections */
+@media (not (prefers-reduced-motion: reduce)) {
+  section[id]:not(#home):not(#about) {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
   }
 }
 
@@ -216,6 +251,12 @@ select,
 .animate-orbit-right { animation: orbitRight 8s ease-in-out infinite; }
 .animate-orbit-left  { animation: orbitLeft 10s ease-in-out infinite; }
 
+@media (max-width: 768px) {
+  /* Slower, simpler animations on mobile */
+  .animate-orbit-right { animation-duration: 12s !important; }
+  .animate-orbit-left  { animation-duration: 15s !important; }
+}
+
 /* About info cards: monochrome */
 .info-card-blue,
 .info-card-green,
@@ -356,19 +397,42 @@ select,
   animation: heroFloat3 22s ease-in-out infinite;
 }
 
-@keyframes heroFloat1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(40px, -30px) scale(1.1); }
+@media (max-width: 768px) {
+  /* Simplify hero blob animations on mobile */
+  .hero-blob-1 { animation-duration: 20s !important; }
+  .hero-blob-2 { animation-duration: 25s !important; }
+  .hero-blob-3 { animation-duration: 30s !important; }
+
+  /* Reduce or disable complex animations on mobile */
+  .hero-blob-1 { animation-name: heroFloatSimple1 !important; }
+  .hero-blob-2 { animation-name: heroFloatSimple2 !important; }
+  .hero-blob-3 { animation-name: heroFloatSimple3 !important; }
 }
 
-@keyframes heroFloat2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(-30px, 30px) scale(1.08); }
+@keyframes heroFloatSimple1 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(20px, -15px); }
 }
 
-@keyframes heroFloat3 {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50%      { transform: translate(-45%, -55%) scale(1.15); }
+@keyframes heroFloatSimple2 {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-15px, 15px); }
+}
+
+@keyframes heroFloatSimple3 {
+  0%, 100% { transform: translate(-50%, -50%); }
+  50%      { transform: translate(-48%, -52%); }
+}
+
+/* Also add will-change for hero blobs */
+.hero-blob {
+  will-change: transform;
+}
+
+@media (max-width: 768px) {
+  .hero-blob {
+    will-change: auto;
+  }
 }
 
 /* Hero name uses solid silver with per-letter fade-in. Avoid background-clip:text
