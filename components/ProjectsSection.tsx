@@ -4,6 +4,7 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import type { Project } from './ProjectModal';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // Modal is heavy (gallery, keyboard handlers, etc.) but only needed when the
 // user actually clicks a card. Defer loading it until then.
@@ -155,10 +156,15 @@ const projects: Project[] = [
 
 export default function ProjectsSection() {
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [sectionRef, isSectionVisible] = useScrollAnimation<HTMLElement>({
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px',
+  });
 
   return (
     <section
       id="projects"
+      ref={sectionRef}
       className="projects-section relative overflow-hidden px-6 py-16"
     >
       {/* Ambient backdrop */}
@@ -169,7 +175,7 @@ export default function ProjectsSection() {
 
       <div className="relative mx-auto max-w-6xl">
         {/* Heading */}
-        <div className="mb-10 text-center">
+        <div className={`mb-10 text-center scroll-reveal ${isSectionVisible ? 'is-visible' : ''}`}>
           <h2 className="gradient-text text-2xl font-bold md:text-4xl">
             Featured Projects
           </h2>
@@ -179,7 +185,9 @@ export default function ProjectsSection() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={`scroll-reveal-stagger grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 ${isSectionVisible ? 'is-visible' : ''}`}
+        >
           {projects.map((p) => (
             <article
               key={p.title}

@@ -1,5 +1,7 @@
 'use client';
 
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
 interface Skill {
   name: string;
   category: string;
@@ -68,9 +70,15 @@ const skills: Skill[] = [
 ];
 
 export default function SkillsSection() {
+  const [sectionRef, isSectionVisible] = useScrollAnimation<HTMLElement>({
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px',
+  });
+
   return (
     <section
       id="skills"
+      ref={sectionRef}
       className="relative overflow-hidden px-6 py-24"
     >
       {/* Ambient backdrop */}
@@ -81,7 +89,7 @@ export default function SkillsSection() {
 
       <div className="relative mx-auto max-w-6xl">
         {/* Heading */}
-        <div className="mb-14 text-center">
+        <div className={`mb-14 text-center scroll-reveal ${isSectionVisible ? 'is-visible' : ''}`}>
           <h2 className="gradient-text text-3xl font-bold md:text-5xl">
             My Skills
           </h2>
@@ -91,7 +99,9 @@ export default function SkillsSection() {
         </div>
 
         {/* Skills Grid */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div
+          className={`scroll-reveal-stagger grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 ${isSectionVisible ? 'is-visible' : ''}`}
+        >
           {skills.map((skill) => (
             <div
               key={skill.name}
