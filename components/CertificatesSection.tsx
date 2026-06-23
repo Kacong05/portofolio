@@ -4,6 +4,7 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import type { Certificate } from './CertificateModal';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 // Lazy-load modal — only when user clicks a card.
 const CertificateModal = dynamic(() => import('./CertificateModal'), {
@@ -42,10 +43,15 @@ function ExternalIcon() {
 
 export default function CertificatesSection() {
   const [activeCert, setActiveCert] = useState<Certificate | null>(null);
+  const [sectionRef, isSectionVisible] = useScrollAnimation<HTMLElement>({
+    threshold: 0.1,
+    rootMargin: '0px 0px -100px 0px',
+  });
 
   return (
     <section
       id="certificates"
+      ref={sectionRef}
       className="certificates-section relative overflow-hidden px-6 py-24"
     >
       {/* Ambient backdrop */}
@@ -56,7 +62,7 @@ export default function CertificatesSection() {
 
       <div className="relative mx-auto max-w-6xl">
         {/* Heading */}
-        <div className="mb-14 text-center">
+        <div className={`mb-14 text-center scroll-reveal ${isSectionVisible ? 'is-visible' : ''}`}>
           <h2 className="gradient-text text-3xl font-bold md:text-5xl">
             Certificates
           </h2>
@@ -66,7 +72,7 @@ export default function CertificatesSection() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className={`scroll-reveal-stagger grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 ${isSectionVisible ? 'is-visible' : ''}`}>
           {certificates.map((c) => (
             <article
               key={c.title}
